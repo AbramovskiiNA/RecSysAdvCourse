@@ -5,7 +5,7 @@ import numpy as np
 from tensorflow.keras import models
 
 
-def json_to_dict(fp: str) -> Dict[int, int]:
+def json_to_dict(fp: str) -> Dict:
     d = json.load(open(fp))
 
     return {int(k): v for k, v in d.items()}
@@ -32,6 +32,19 @@ class ModelServing:
         return list(map(self.rev_items_map.get, top_items_enc))
 
 
+class ProductNames:
+    def __init__(self):
+        self.product_map = json_to_dict('products_map.json')
+
+    def ids_to_names(self, ids: List[int]) -> List[str]:
+        return list(map(self.product_map.get, ids))
+
+
 if __name__ == '__main__':
     a = ModelServing()
-    print(a.predict(201052))
+    pred = a.predict(201052)
+    print(pred)
+
+    pn = ProductNames()
+    pred_names = pn.ids_to_names(pred)
+    print(pred_names)

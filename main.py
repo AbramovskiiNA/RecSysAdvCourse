@@ -2,10 +2,11 @@ import json
 
 from flask import Flask, request
 
-from model import ModelServing
+from model import ModelServing, ProductNames
 
 app = Flask(__name__)
 model_serving = ModelServing()
+product_names = ProductNames()
 
 
 @app.route('/users')
@@ -19,6 +20,14 @@ def predict():
         int(request.args['user_id']),
         int(request.args['k'])
     ))
+
+
+@app.route('/predict_names')
+def predict_names():
+    return json.dumps(product_names.ids_to_names(model_serving.predict(
+        int(request.args['user_id']),
+        int(request.args['k'])
+    )))
 
 
 @app.route('/shutdown', methods=['GET', 'POST'])
